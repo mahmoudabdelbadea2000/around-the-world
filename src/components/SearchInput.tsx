@@ -2,20 +2,19 @@ import { FormEvent } from "react";
 import { IFilter } from "../interfaces";
 
 export function SearchInput({ countries, filterCountry }: IFilter) {
-  const handelSearch = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const searchWord = e.target.elements.search.value;
-
-    const newCountries = countries.filter((country) =>
-      country.name.common
-        .toLowerCase()
-        .includes(searchWord.trim().toLowerCase()),
+  const handleSearch = (event: FormEvent) => {
+    event.preventDefault();
+    const searchElement = (event.target as HTMLFormElement).elements.namedItem(
+      "search",
+    ) as HTMLInputElement | null;
+    const filteredCountries = countries.filter((country) =>
+      country.name.common.toLowerCase().includes(searchElement?.value || ""),
     );
-    filterCountry(newCountries);
+    filterCountry(filteredCountries);
   };
 
   return (
-    <form className="relative flex-1" onSubmit={handelSearch}>
+    <form className="relative flex-1" onSubmit={(e) => handleSearch(e)}>
       <div className="absolute left-8 top-4">
         <svg
           width="18"
